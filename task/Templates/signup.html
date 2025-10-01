@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Create account</title>
+    <style>
+        /* Reset de márgenes y altura para asegurarse que la página ocupe toda la ventana */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif; /* Fuente clara y moderna */
+        }
+
+        /* Configuración de Flexbox para centrar el contenido */
+        body {
+            display: flex; /* Activamos el modelo Flexbox */
+            justify-content: center; /* Centrado horizontal */
+            align-items: center; /* Centrado vertical */
+            background-color: #5e2a8c; /* Fondo morado oscuro */
+            color: white(237, 226, 237); /* Color de texto blanco */
+            text-align: center; /* Alineación del texto */
+        }
+
+        /* Estilo para el contenedor del contenido */
+        .contenido {
+            width: 300px; /* Ancho fijo para el contenedor */
+            padding: 20px; /* Espaciado interno */
+            background-color: #8e44ad; /* Fondo morado más claro */
+            border-radius: 15px; /* Bordes redondeados */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+        }
+
+        /* Estilo para el título */
+        h1 {
+            font-size: 36px; /* Tamaño grande para el título */
+            margin-bottom: 10px; /* Espaciado entre el título y el párrafo */
+        }
+
+        /* Estilo para el párrafo */
+        p {
+            font-size: 16px; /* Tamaño de fuente moderado */
+            line-height: 1.5; /* Espaciado entre líneas */
+            margin-top: 0; /* Elimina el margen superior del párrafo */
+        }
+
+        /* Estilo para el campo de entrada del formulario */
+        input {
+            width: 80%; /* Hace que el campo ocupe todo el ancho disponible */
+            padding: 10px; /* Espaciado interno */
+            margin: 10px 0; /* Espaciado vertical */
+            border: 1px solid #8e44ad; /* Borde morado */
+            border-radius: 5px; /* Bordes redondeados */
+            background-color: #f0e6f7; /* Fondo morado muy claro para el campo de entrada */
+            color: #333; /* Texto oscuro dentro del campo */
+            font-size: 16px; /* Tamaño de fuente adecuado */
+        }
+
+        /* Estilo para el botón de envío */
+        button {
+            padding: 10px 20px; /* Espaciado dentro del botón */
+            background-color: #8e44ad; /* Fondo morado claro */
+            border: none; /* Eliminar bordes predeterminados */
+            border-radius: 5px; /* Bordes redondeados */
+            color: white; /* Texto blanco */
+            font-size: 16px; /* Tamaño de fuente adecuado */
+            cursor: pointer; /* Cambio de cursor a mano al pasar sobre el botón */
+            transition: background-color 0.3s; /* Transición suave al pasar el mouse */
+        }
+
+        /* Efecto hover para el botón */
+        button:hover {
+            background-color: #5e2a8c; /* Cambia a un morado más oscuro al pasar el mouse */
+        }
+    </style>
+</head>
+<body>
+    <div class="contenido">
+        <h1>Welcome!</h1>
+       <!-- <p></p>-->
+        
+        <!-- Formulario de ejemplo con un campo de entrada y un botón -->
+        <form action="http://127.0.0.1:8000/signup/" method="POST">
+            {%csrf_token%}
+            <input id="username" type="text" name="username" placeholder="Username" required>
+            <input id="password1" type="password1" name="password1" placeholder="Password" required>
+            <input id="password2" type="password2" name="password2" placeholder="Confirm your password" required>
+            <input id="gmail" type="gmail" name="gmail" placeholder="Gmail" required>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</body>
+</html>
