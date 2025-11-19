@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevar Matriz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            padding: 20px;
+        }
+
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .input-container {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    label {
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    input[type="number"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 70px;
+        text-align: center;
+    }
+
+    .matrix-section {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        gap: 35px;
+        margin-top: 15px;
+    }
+
+    .matrix-box {
+        text-align: center;
+    }
+
+    .matrix-container {
+        display: grid;
+        grid-auto-rows:45px;
+        grid-template-columns: repeat(auto-fill, 35px);
+        gap: 55px;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    .matrix-container input {
+        width: 70px;
+        height: 70px;
+        text-align: center;
+        font-size: 14px;
+        border-radius: 4px;
+        border: 1px solid #aaa;
+    }
+
+    .matrix-cell {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+        font-size: 14px;
+        border-radius: 4px;
+        border: 1px solid #aaa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f0f0f0;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+</style>
+    <div class="input-container">
+        <label for="matrix-size">Tamaño de la Matriz (n x n):</label>
+        <input type="number" id="matrix-size" min="2" value="3">
+    </div>
+
+    <div class="input-container">
+        <label for="exponent">Número al cual elevar la matriz:</label>
+        <input type="number" id="exponent" min="1" value="2">
+    </div>
+
+    <div class="matrix-section">
+        <div class="matrix-box">
+            <h2>Matriz Original</h2>
+            <div class="matrix-container" id="matrix-container"></div>
+        </div>
+
+        <div class="matrix-box">
+            <h2>Resultado</h2>
+            <div class="matrix-container" id="matrix-result"></div>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button id="generate-matrix">Generar Matriz</button>
+        <button id="calculate-matrix">Elevar la Matriz</button>
+    </div>
+</div>
+
+<script>
+    function generateMatrix() {
+        const size = parseInt(document.getElementById("matrix-size").value);
+        const matrixContainer = document.getElementById("matrix-container");
+        const resultContainer = document.getElementById("matrix-result");
+
+        matrixContainer.innerHTML = "";
+        resultContainer.innerHTML = "";
+
+        matrixContainer.style.gridTemplateColumns = `repeat(${size}, 35px)`;
+        resultContainer.style.gridTemplateColumns = `repeat(${size}, 35px)`;
+
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const input = document.createElement("input");
+                input.type = "number";
+                input.id = `matrix-${i}-${j}`;
+                matrixContainer.appendChild(input);
+            }
+        }
+    }
+
+    function calculateMatrix() {
+        const size = parseInt(document.getElementById("matrix-size").value);
+        const exponent = parseInt(document.getElementById("exponent").value);
+        const resultContainer = document.getElementById("matrix-result");
+        let matrix = [];
+
+        for (let i = 0; i < size; i++) {
+            let row = [];
+            for (let j = 0; j < size; j++) {
+                const value = parseFloat(document.getElementById(`matrix-${i}-${j}`).value) || 0;
+                row.push(value);
+            }
+            matrix.push(row);
+        }
+
+        // Elevar cada elemento individualmente (no multiplicación de matrices)
+        let result = matrix.map(row => row.map(val => Math.pow(val, exponent)));
+
+        // Mostrar resultado
+        resultContainer.innerHTML = "";
+        resultContainer.style.gridTemplateColumns = `repeat(${size}, 35px)`;
+
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const cell = document.createElement("div");
+                cell.classList.add("matrix-cell");
+                cell.textContent = result[i][j];
+                resultContainer.appendChild(cell);
+            }
+        }
+    }
+
+    document.getElementById("generate-matrix").addEventListener("click", generateMatrix);
+    document.getElementById("calculate-matrix").addEventListener("click", calculateMatrix);
+
+    window.onload = generateMatrix;
+</script>

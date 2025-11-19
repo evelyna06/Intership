@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)http://127.0.0.1:8000/accounts/confirm-email/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ===== RESET ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #e8eaf6, #ede7f6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        /* ===== ELEMENTOS DECORATIVOS ===== */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(102,126,234,0.3), transparent);
+            top: -100px;
+            left: -100px;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(118,75,162,0.25), transparent);
+            bottom: -150px;
+            right: -100px;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        /* ===== CONTENEDOR ENVOLVENTE ===== */
+        body {
+            flex-direction: column;
+        }
+
+        body > div,
+        body > h1,
+        body > p,
+        body > form {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== CONTENEDOR VISUAL ===== */
+        body::after {
+            content: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #e8eaf6, #ede7f6);
+        }
+
+        /* Crear contenedor visual centralizado */
+        body > * {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        body > div:first-child {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px 15px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        body > h1 {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 40px 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        body > p {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 40px 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        body > form {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px 45px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        body > div:first-child:hover ~ h1,
+        body > div:first-child:hover ~ p,
+        body > div:first-child:hover ~ form,
+        body > h1:hover,
+        body > h1:hover ~ p,
+        body > h1:hover ~ form,
+        body > p:hover,
+        body > p:hover ~ form,
+        body > form:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ===== MENÚ ===== */
+        div strong {
+            display: block;
+            font-size: 14px;
+            color: #5a67d8;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        li {
+            display: inline;
+        }
+
+        a {
+            color: #5a67d8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 6px 18px;
+            border-radius: 20px;
+            background: rgba(90, 103, 216, 0.1);
+            display: inline-block;
+        }
+
+        a:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-1px);
+        }
+
+        /* ===== TÍTULO ===== */
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a237e;
+            margin: 0;
+            text-align: center;
+            animation: flotar 3s ease-in-out infinite;
+        }
+
+        @keyframes flotar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* ===== PÁRRAFO ===== */
+        p {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+            text-align: center;
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+
+        /* ===== FORMULARIO ===== */
+        form {
+            margin: 0;
+            text-align: center;
+        }
+
+        /* ===== INPUT HIDDEN ===== */
+        input[type="hidden"] {
+            display: none;
+        }
+
+        /* ===== BOTÓN ===== */
+        button {
+            width: 100%;
+            padding: 14px 20px;
+            margin: 0;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 500px) {
+            body > div:first-child,
+            body > h1,
+            body > p,
+            body > form {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+        }
+    </style>
+
+
+
+
+
+
+
+
+        <title>
+            
+    Verify Your Email Address
+
+        </title>
+        
+        
+    </head>
+    <body>
+        
+            
+                <div>
+                    <strong>Messages:</strong>
+                    <ul>
+                        <li>Confirmation email sent to armasyaniel@gmail.com.</li>
+                    </ul>
+                </div>
+            
+            <div>
+
+                <ul>
+                    
+                        
+                        
+
+
+                    
+                </ul>
+            </div>
+            
+    <h1>
+        Verify Your Email Address
+    </h1>
+
+    <p>
+        We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.
+    </p>
+
+
+        
+        
+        
+    
+
+</body></html>

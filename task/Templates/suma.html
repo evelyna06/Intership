@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suma de Matrices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            padding: 20px;
+        }
+
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .input-container {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 70px;
+            text-align: center;
+        }
+
+        .matrix-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 35px;
+            margin-top: 15px;
+        }
+
+        .matrix-box {
+            text-align: center;
+        }
+
+        .matrix-container {
+            display: grid;
+            grid-auto-rows: 70px;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .matrix-container input {
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+        }
+
+        .matrix-cell {
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 50px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Suma de Matrizes</h1>
+
+        <div class="input-container">
+            <label for="matrix-rows">Número de Filas:</label>
+            <input type="number" id="matrix-rows" min="1" value="3">
+            <label for="matrix-cols">Número de Columnas:</label>
+            <input type="number" id="matrix-cols" min="1" value="3">
+        </div>
+
+        <div class="matrix-section">
+            <div class="matrix-box">
+                <h2>Matriz 1</h2>
+                <div class="matrix-container" id="matrix1-container"></div>
+            </div>
+
+            <div class="matrix-box">
+                <h2>Matriz 2</h2>
+                <div class="matrix-container" id="matrix2-container"></div>
+            </div>
+        </div>
+
+        <div class="matrix-section">
+            <div class="matrix-box">
+                <h2>Resultado (Matriz Suma)</h2>
+                <div class="matrix-container" id="matrix-result"></div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="generate-matrices">Generar Matrizes</button>
+            <button id="sum-matrices">Sumar Matrices</button>
+        </div>
+    </div>
+
+    <script>
+        function generateMatrices() {
+            const rows = parseInt(document.getElementById("matrix-rows").value);
+            const cols = parseInt(document.getElementById("matrix-cols").value);
+
+            const matrix1Container = document.getElementById("matrix1-container");
+            const matrix2Container = document.getElementById("matrix2-container");
+            const resultContainer = document.getElementById("matrix-result");
+
+            matrix1Container.innerHTML = "";
+            matrix2Container.innerHTML = "";
+            resultContainer.innerHTML = "";
+
+            matrix1Container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            matrix2Container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            resultContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+            // Generar celdas para las dos matrices
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const input1 = document.createElement("input");
+                    input1.type = "number";
+                    input1.id = `matrix1-${i}-${j}`;
+                    matrix1Container.appendChild(input1);
+
+                    const input2 = document.createElement("input");
+                    input2.type = "number";
+                    input2.id = `matrix2-${i}-${j}`;
+                    matrix2Container.appendChild(input2);
+                }
+            }
+        }
+
+        function sumMatrices() {
+            const rows = parseInt(document.getElementById("matrix-rows").value);
+            const cols = parseInt(document.getElementById("matrix-cols").value);
+            const resultContainer = document.getElementById("matrix-result");
+
+            let matrix1 = [];
+            let matrix2 = [];
+
+            // Obtener las matrices
+            for (let i = 0; i < rows; i++) {
+                let row1 = [];
+                let row2 = [];
+                for (let j = 0; j < cols; j++) {
+                    const value1 = parseFloat(document.getElementById(`matrix1-${i}-${j}`).value) || 0;
+                    const value2 = parseFloat(document.getElementById(`matrix2-${i}-${j}`).value) || 0;
+                    row1.push(value1);
+                    row2.push(value2);
+                }
+                matrix1.push(row1);
+                matrix2.push(row2);
+            }
+
+            // Calcular la suma de las matrices
+            let resultMatrix = [];
+            for (let i = 0; i < rows; i++) {
+                let row = [];
+                for (let j = 0; j < cols; j++) {
+                    row.push(matrix1[i][j] + matrix2[i][j]);
+                }
+                resultMatrix.push(row);
+            }
+
+            // Mostrar la matriz resultante
+            resultContainer.innerHTML = "";
+            resultContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("matrix-cell");
+                    cell.textContent = resultMatrix[i][j];
+                    resultContainer.appendChild(cell);
+                }
+            }
+        }
+
+        document.getElementById("generate-matrices").addEventListener("click", generateMatrices);
+        document.getElementById("sum-matrices").addEventListener("click", sumMatrices);
+
+        window.onload = generateMatrices;
+    </script>
+</body>
+</html>

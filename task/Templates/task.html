@@ -1,83 +1,294 @@
-<!--<h1>task</h1>
-<li>
-<a href="http://127.0.0.1:8000">Home</a>
-<a href="/logout">salir</a>
-<a href="/change_password">Change_password</a>
-</li>   --> 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tareas</title>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mathematic Functions</title>
     <style>
-        /* Reset de márgenes y altura para asegurarse que la página ocupe toda la ventana */
-        body, html {
+        /* ===== RESET ===== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
             height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif; /* Fuente clara y moderna */
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(circle at 20% 20%, #e3f2fd 0%, #e8eaf6 35%, #ede7f6 100%);
+            color: #2c3e50;
+            overflow: hidden;
+            animation: fadeIn 1s ease forwards;
+            position: relative;
         }
 
-        /* Configuración de Flexbox para centrar el contenido */
-        body {
-            display: flex; /* Activamos el modelo Flexbox */
-            justify-content: center; /* Centrado horizontal */
-            align-items: center; /* Centrado vertical */
-            background-color: #5e2a8c; /* Fondo morado oscuro */
-            color: white; /* Color de texto blanco */
-            text-align: center; /* Alineación del texto */
-            flex-direction: column; /* Apila los elementos de forma vertical */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        /* Estilo para el contenedor principal */
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.97); }
+        }
+
+        /* ===== FONDO DINÁMICO ===== */
+        .fondo-animado {
+            position: fixed; /* fixed para que quede detrás y no afecte flujo */
+            top: 0; left: 0; right: 0; bottom: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none; /* Para que no interfiera con clicks */
+            background: transparent;
+        }
+
+        .burbuja {
+            position: absolute;
+            background: radial-gradient(circle, rgba(102,126,234,0.25), transparent 70%);
+            border-radius: 50%;
+            animation: flotarBurbuja linear infinite;
+            will-change: transform, opacity;
+        }
+
+        @keyframes flotarBurbuja {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            100% { transform: translateY(-1200px) scale(1.2); opacity: 0; }
+        }
+
+        /* ===== SIMBOLOS ANIMADOS ===== */
+        .simbolos-animados {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: visible;
+        }
+
+        .simbolo {
+            position: absolute;
+            font-family: 'Segoe UI Symbol', 'Arial Unicode MS', Arial, sans-serif;
+            color: rgba(90, 103, 216, 0.35);
+            text-shadow: 0 0 5px rgba(90, 103, 216, 0.8);
+            user-select: none;
+            animation-name: aparecerDesaparecer;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            will-change: opacity, transform;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            padding: 2px 5px;
+            white-space: nowrap;
+        }
+
+        @keyframes aparecerDesaparecer {
+            0% { opacity: 0; transform: translateY(10px) scale(0.9); }
+            50% { opacity: 0.35; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-10px) scale(0.9); }
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
         .contenido {
-            width: 350px; /* Ancho fijo para el contenedor */
-            padding: 20px; /* Espaciado interno */
-            background-color: #8e44ad; /* Fondo morado más claro */
-            border-radius: 15px; /* Bordes redondeados */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+            position: relative;
+            z-index: 10; /* Mucho más arriba para asegurar */
+            background: rgba(255,255,255,0.9);
+            padding: 60px 50px;
+            border-radius: 25px;
+            box-shadow: 0 8px 35px rgba(0,0,0,0.1);
+            width: 470px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s ease;
+            margin: 40px auto; /* Centrado vertical y horizontal */
         }
 
-        /* Estilo para el título */
+        .contenido:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 45px rgba(118,75,162,0.15);
+        }
+
+        /* ===== ICONO PRINCIPAL ===== */
+        .icono {
+            font-size: 65px;
+            color: #5a67d8;
+            margin-bottom: 15px;
+            animation: brillar 3s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(102,126,234,0.4);
+        }
+
+        @keyframes brillar {
+            0%,100% { text-shadow: 0 0 8px rgba(118,75,162,0.3); transform: scale(1); }
+            50% { text-shadow: 0 0 20px rgba(102,126,234,0.6); transform: scale(1.05); }
+        }
+
+        /* ===== TÍTULO ===== */
         h1 {
-            font-size: 36px; /* Tamaño grande para el título */
-            margin-bottom: 20px; /* Espaciado */
+            font-size: 30px;
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 25px;
         }
 
-        /* Estilo para lista y enlaces */
-        li {
-            list-style: none; /* Quitar viñetas */
-            padding: 0;
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 15;
         }
 
-        li a {
-            display: block; /* Cada enlace en una línea */
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f0e6f7;
-            color: #333;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        li a:hover {
-            background-color: #5e2a8c;
+        .navbar button {
+            padding: 10px 22px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
             color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 4px 15px rgba(118,75,162,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .navbar button:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(118,75,162,0.4);
+        }
+
+        /* ===== BOTONES DE FUNCIONES ===== */
+        .boton {
+            display: block;
+            width: 100%;
+            padding: 45px 20px;
+            margin: 20px 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(118,75,162,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .boton::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.15);
+            transform: skewX(-20deg);
+            transition: left 0.5s ease;
+        }
+
+        .boton:hover::before { left: 200%; }
+        .boton:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(118,75,162,0.4);
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #7a7a7a;
+        }
+
+        footer span {
+            color: #5a67d8;
+            font-weight: 600;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 500px) {
+            .contenido {
+                width: 90%;
+                padding: 35px 25px;
+            }
+            h1 { font-size: 24px; }
+            .navbar { flex-direction: column; gap: 10px; top: 10px; }
         }
     </style>
 </head>
 <body>
+    <!-- Fondo animado -->
+    <div class="fondo-animado" id="fondo"></div>
+    <div class="simbolos-animados"></div>
+
+    <!-- Contenedor principal -->
     <div class="contenido">
-        <h1>task</h1>
-        <li>
-            <a href="http://127.0.0.1:8000">Home</a>
-            <a href="/logout">exit</a>
-            <a href="/change_password">Change_password</a>
-        </li>
+        <div class="icono">∑</div>
+        <h1>Mathematic Functions</h1>
+
+        <!-- Barra superior -->
+        <div class="navbar">
+            <button onclick="transitionTo('{% url 'Home' %}')">🏠 Home</button>
+            <button onclick="transitionTo('{% url 'cambiar_password' %}')">🔐 Change Password</button>
+            <button onclick="transitionTo('/logout')">🚪 Sign Out</button>
+
+        </div>
+        <div id="user-info" data-user="{{ user.email }}"></div>
+
+
+        <!-- Botones principales -->
+        <button class="boton" onclick="transitionTo('{% url 'operaciones' %}')">➗ Operations With Matrices</button>
+        <button class="boton" onclick="transitionTo('{% url 'SEL' %}')">📈 Systems of Linear Equations</button>
+        <button class="boton" onclick="transitionTo('{% url 'chat' %}')"> IA Assistant</button>
+
+        <footer>
+             <span>Álgebra</span> Educational Platform © 2025
+
+        </footer>
     </div>
+
+    <script>
+        // ===== Transición suave =====
+        function transitionTo(url) {
+            document.body.style.animation = 'fadeOut 0.6s ease forwards';
+            setTimeout(() => { window.location.href = url; }, 500);
+        }
+
+        // ===== Fondo animado dinámico: burbujas =====
+        const fondo = document.getElementById('fondo');
+        for (let i = 0; i < 12; i++) {
+            const burbuja = document.createElement('div');
+            const size = Math.random() * 180 + 80;
+            const duracion = Math.random() * 10 + 12;
+            const delay = Math.random() * 10;
+            const left = Math.random() * 100;
+            burbuja.classList.add('burbuja');
+            burbuja.style.width = `${size}px`;
+            burbuja.style.height = `${size}px`;
+            burbuja.style.left = `${left}%`;
+            burbuja.style.bottom = '-200px';
+            burbuja.style.animationDuration = `${duracion}s`;
+            burbuja.style.animationDelay = `${delay}s`;
+            fondo.appendChild(burbuja);
+        }
+
+        // ===== Fondo animado dinámico: símbolos algebraicos =====
+        const simbolos = ['∑', '∫', '√', '∞', 'Δ', 'θ', 'λ', 'π', '∂', '±', '≈', '∈'];
+        const containerSimbolos = document.querySelector('.simbolos-animados');
+
+        for(let i=0; i<30; i++) {
+            const simbolo = document.createElement('div');
+            simbolo.classList.add('simbolo');
+            simbolo.textContent = simbolos[Math.floor(Math.random() * simbolos.length)];
+            simbolo.style.left = `${Math.random() * 100}%`;
+            simbolo.style.top = `${Math.random() * 100}%`;
+            simbolo.style.fontSize = `${12 + Math.random() * 20}px`;
+            simbolo.style.animationDuration = `${4 + Math.random() * 6}s`;
+            simbolo.style.animationDelay = `${Math.random() * 10}s`;
+            containerSimbolos.appendChild(simbolo);
+        }
+    </script>
 </body>
 </html>
-
-

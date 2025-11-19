@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplicación de Matrices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            padding: 20px;
+        }
+
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .input-container {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 70px;
+            text-align: center;
+        }
+
+        .matrix-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 35px;
+            margin-top: 15px;
+        }
+
+        .matrix-box {
+            text-align: center;
+        }
+
+        .matrix-container {
+            display: grid;
+            grid-auto-rows: 70px;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .matrix-container input {
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+        }
+
+        .matrix-cell {
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 50px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .warning {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Multiplicación de Matrizes</h1>
+
+        <div class="input-container">
+            <label for="matrix1-rows">Filas de la Matriz 1:</label>
+            <input type="number" id="matrix1-rows" min="1" value="3">
+            <label for="matrix1-cols">Columnas de la Matriz 1:</label>
+            <input type="number" id="matrix1-cols" min="1" value="3">
+        </div>
+
+        <div class="input-container">
+            <label for="matrix2-rows">Filas de la Matriz 2:</label>
+            <input type="number" id="matrix2-rows" min="1" value="3">
+            <label for="matrix2-cols">Columnas de la Matriz 2:</label>
+            <input type="number" id="matrix2-cols" min="1" value="3">
+        </div>
+
+        <div class="matrix-section">
+            <div class="matrix-box">
+                <h2>Matriz 1</h2>
+                <div class="matrix-container" id="matrix1-container"></div>
+            </div>
+
+            <div class="matrix-box">
+                <h2>Matriz 2</h2>
+                <div class="matrix-container" id="matrix2-container"></div>
+            </div>
+        </div>
+
+        <div class="matrix-section">
+            <div class="matrix-box">
+                <h2>Resultado (Matriz Multiplicada)</h2>
+                <div class="matrix-container" id="matrix-result"></div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="generate-matrices">Generar Matrizes</button>
+            <button id="multiply-matrices">Multiplicar Matrizes</button>
+        </div>
+
+        <div class="warning" id="warning"></div>
+    </div>
+
+    <script>
+        function generateMatrices() {
+            const rows1 = parseInt(document.getElementById("matrix1-rows").value);
+            const cols1 = parseInt(document.getElementById("matrix1-cols").value);
+            const rows2 = parseInt(document.getElementById("matrix2-rows").value);
+            const cols2 = parseInt(document.getElementById("matrix2-cols").value);
+
+            const matrix1Container = document.getElementById("matrix1-container");
+            const matrix2Container = document.getElementById("matrix2-container");
+            const resultContainer = document.getElementById("matrix-result");
+            const warningContainer = document.getElementById("warning");
+
+            matrix1Container.innerHTML = "";
+            matrix2Container.innerHTML = "";
+            resultContainer.innerHTML = "";
+            warningContainer.innerHTML = "";
+
+            matrix1Container.style.gridTemplateColumns = `repeat(${cols1}, 1fr)`;
+            matrix2Container.style.gridTemplateColumns = `repeat(${cols2}, 1fr)`;
+            resultContainer.style.gridTemplateColumns = `repeat(${cols2}, 1fr)`;
+
+            // Generar celdas para las dos matrices
+            for (let i = 0; i < rows1; i++) {
+                for (let j = 0; j < cols1; j++) {
+                    const input1 = document.createElement("input");
+                    input1.type = "number";
+                    input1.id = `matrix1-${i}-${j}`;
+                    matrix1Container.appendChild(input1);
+                }
+            }
+
+            for (let i = 0; i < rows2; i++) {
+                for (let j = 0; j < cols2; j++) {
+                    const input2 = document.createElement("input");
+                    input2.type = "number";
+                    input2.id = `matrix2-${i}-${j}`;
+                    matrix2Container.appendChild(input2);
+                }
+            }
+        }
+
+        function multiplyMatrices() {
+            const rows1 = parseInt(document.getElementById("matrix1-rows").value);
+            const cols1 = parseInt(document.getElementById("matrix1-cols").value);
+            const rows2 = parseInt(document.getElementById("matrix2-rows").value);
+            const cols2 = parseInt(document.getElementById("matrix2-cols").value);
+            const resultContainer = document.getElementById("matrix-result");
+            const warningContainer = document.getElementById("warning");
+
+            // Comprobar si las dimensiones son compatibles
+            if (cols1 !== rows2) {
+                warningContainer.innerHTML = "Advertencia: El número de columnas de la Matriz 1 debe coincidir con el número de filas de la Matriz 2.";
+                return;
+            } else {
+                warningContainer.innerHTML = ""; // Limpiar la advertencia si las matrices son compatibles
+            }
+
+            let matrix1 = [];
+            let matrix2 = [];
+
+            // Obtener los valores de las matrices
+            for (let i = 0; i < rows1; i++) {
+                let row1 = [];
+                for (let j = 0; j < cols1; j++) {
+                    const value1 = parseFloat(document.getElementById(`matrix1-${i}-${j}`).value) || 0;
+                    row1.push(value1);
+                }
+                matrix1.push(row1);
+            }
+
+            for (let i = 0; i < rows2; i++) {
+                let row2 = [];
+                for (let j = 0; j < cols2; j++) {
+                    const value2 = parseFloat(document.getElementById(`matrix2-${i}-${j}`).value) || 0;
+                    row2.push(value2);
+                }
+                matrix2.push(row2);
+            }
+
+            // Realizar la multiplicación de matrices
+            let resultMatrix = [];
+            for (let i = 0; i < rows1; i++) {
+                let row = [];
+                for (let j = 0; j < cols2; j++) {
+                    let sum = 0;
+                    for (let k = 0; k < cols1; k++) {
+                        sum += matrix1[i][k] * matrix2[k][j];
+                    }
+                    row.push(sum);
+                }
+                resultMatrix.push(row);
+            }
+
+            // Mostrar la matriz resultante
+            resultContainer.innerHTML = "";
+            resultContainer.style.gridTemplateColumns = `repeat(${cols2}, 1fr)`;
+
+            for (let i = 0; i < rows1; i++) {
+                for (let j = 0; j < cols2; j++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("matrix-cell");
+                    cell.textContent = resultMatrix[i][j];
+                    resultContainer.appendChild(cell);
+                }
+            }
+        }
+
+        document.getElementById("generate-matrices").addEventListener("click", generateMatrices);
+        document.getElementById("multiply-matrices").addEventListener("click", multiplyMatrices);
+
+        window.onload = generateMatrices;
+    </script>
+
+</body>
+</html>

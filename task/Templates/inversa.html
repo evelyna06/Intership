@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcular Inversa de Matriz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            padding: 20px;
+        }
+
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .input-container {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 70px;
+            text-align: center;
+        }
+
+        .matrix-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 35px;
+            margin-top: 15px;
+        }
+
+        .matrix-box {
+            text-align: center;
+        }
+
+        .matrix-container {
+            display: grid;
+            grid-auto-rows: 70px;
+            grid-template-columns: repeat(auto-fill, 35px);
+            gap: 20px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .matrix-container input {
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+        }
+
+        .matrix-cell {
+            width: 80px;
+            height: 80px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 50px; 
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calcular Inversa de Matriz</h1>
+
+        <div class="input-container">
+            <label for="matrix-size">Tamaño de la Matriz (n x n):</label>
+            <input type="number" id="matrix-size" min="2" value="3">
+        </div>
+
+        <div class="matrix-section">
+            <div class="matrix-box">
+                <h2>Matriz Original</h2>
+                <div class="matrix-container" id="matrix-container"></div>
+            </div>
+
+            <div class="matrix-box">
+                <h2>Matriz Inversa</h2>
+                <div class="matrix-container" id="matrix-result"></div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="generate-matrix">Generar Matriz</button>
+            <button id="calculate-inverse">Calcular Inversa</button>
+        </div>
+    </div>
+
+    <script>
+        function generateMatrix() {
+            const size = parseInt(document.getElementById("matrix-size").value);
+            const matrixContainer = document.getElementById("matrix-container");
+            const resultContainer = document.getElementById("matrix-result");
+
+            matrixContainer.innerHTML = "";
+            resultContainer.innerHTML = "";
+
+            matrixContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+            resultContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    const input = document.createElement("input");
+                    input.type = "number";
+                    input.id = `matrix-${i}-${j}`;
+                    matrixContainer.appendChild(input);
+                }
+            }
+        }
+
+        // Función para calcular la inversa utilizando el método de Gauss-Jordan
+        function calculateInverse() {
+            const size = parseInt(document.getElementById("matrix-size").value);
+            const resultContainer = document.getElementById("matrix-result");
+            let matrix = [];
+            let identity = [];
+
+            // Obtener los valores ingresados para la matriz
+            for (let i = 0; i < size; i++) {
+                let row = [];
+                for (let j = 0; j < size; j++) {
+                    const value = parseFloat(document.getElementById(`matrix-${i}-${j}`).value) || 0;
+                    row.push(value);
+                }
+                matrix.push(row);
+            }
+
+            // Crear la matriz identidad
+            for (let i = 0; i < size; i++) {
+                let row = [];
+                for (let j = 0; j < size; j++) {
+                    row.push(i === j ? 1 : 0);
+                }
+                identity.push(row);
+            }
+
+            // Aplicar el algoritmo de Gauss-Jordan
+            for (let i = 0; i < size; i++) {
+                let pivot = matrix[i][i];
+                if (pivot === 0) {
+                    document.getElementById("matrix-result").textContent = "La matriz no es invertible.";
+                    return;
+                }
+
+                // Normalizar la fila dividiendo por el pivote
+                for (let j = 0; j < size; j++) {
+                    matrix[i][j] /= pivot;
+                    identity[i][j] /= pivot;
+                }
+
+                // Hacer ceros en la columna del pivote
+                for (let k = 0; k < size; k++) {
+                    if (k !== i) {
+                        let factor = matrix[k][i];
+                        for (let j = 0; j < size; j++) {
+                            matrix[k][j] -= factor * matrix[i][j];
+                            identity[k][j] -= factor * identity[i][j];
+                        }
+                    }
+                }
+            }
+
+            // Mostrar la matriz inversa
+            resultContainer.innerHTML = "";
+            resultContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("matrix-cell");
+                    cell.textContent = identity[i][j].toFixed(2);
+                    resultContainer.appendChild(cell);
+                }
+            }
+        }
+
+        document.getElementById("generate-matrix").addEventListener("click", generateMatrix);
+        document.getElementById("calculate-inverse").addEventListener("click", calculateInverse);
+
+        window.onload = generateMatrix;
+    </script>
+
+</body>
+</html>

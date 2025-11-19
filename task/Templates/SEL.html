@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Initial Page</title>
     <style>
         /* ===== RESET ===== */
         * {
@@ -50,16 +49,17 @@
 
         /* ===== CONTENEDOR PRINCIPAL ===== */
         .contenido {
-            position: relative;
+            position: center;
             z-index: 1;
             background: rgba(255, 255, 255, 0.95);
-            padding: 45px 40px;
+            padding: 40px 40px;
             border-radius: 20px;
             box-shadow: 0 8px 35px rgba(0, 0, 0, 0.08);
-            width: 400px;
+            width: 500px;
             text-align: center;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
+            height:680px;
         }
 
         .contenido:hover {
@@ -94,7 +94,7 @@
             margin-bottom: 25px;
         }
 
-        /* ===== BOTONES ===== */
+    /* ===== BOTONES ===== */
         button {
             width: 100%;
             padding: 12px 18px;
@@ -111,16 +111,40 @@
             box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
         }
 
-        button:hover {
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
-        }
+    button:hover {
+      background: linear-gradient(135deg, #5a67d8, #6b46c1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+    }
 
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
-        }
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
+    }
+
+    /* ===== BOTÓN HOME FIJO EN ESQUINA ===== */
+    .navbar {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1000;
+    }
+    .navbar button {
+      background: #4a4f8a; /* más oscuro para mejor visibilidad */
+      border: none;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(40, 44, 85, 0.6);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .navbar button:hover {
+      background: #3b3f73;
+      box-shadow: 0 6px 18px rgba(33, 36, 70, 0.8);
+    }
 
         /* ===== ENLACES ===== */
         a {
@@ -166,23 +190,32 @@
                 font-size: 24px;
             }
         }
+        .botones-operaciones {
+            grid-template-columns: 1fr; /* Una columna en móvil */
+      }
+
+
     </style>
 </head>
+
+
+
+
+
+
+
+
+
+
 <body>
-    <div class="contenido">
-        <div class="icono">∑</div> <!-- Símbolo algebraico -->
-        {% if user.is_authenticated %}
-            <h1>Welcome!</h1>
-            <li><a href="/task">Home Page</a></li>
-        {% else %}
-            <h1>Welcome!</h1>
-            <h3>Choose an option to continue:</h3>
-            <button onclick="location.href='http://127.0.0.1:8000/loguin'">Login</button>
-            <button onclick="location.href='http://127.0.0.1:8000/signup'">Create account</button>
-        {% endif %}
-        <footer>
-            <span>Álgebra</span> Educational Platform © 2025
-        </footer>
-    </div>
-</body>
+<div class="contenido"> 
+    <div class="botones-operaciones">
+        <button onclick="location.href='{% url 'cramer' %}'">Cramer</button>
+        <button onclick="location.href='{% url 'elim_gauss' %}'">Gauss</button>
+        <button onclick="location.href='{% url 'elim_gauss_jordan' %}'">Gauss_Jordan</button>
+        <button onclick="location.href='{% url 'jacobi' %}'">Jacobi</button>
+    <div>
+<div>
+<body>
+
 </html>

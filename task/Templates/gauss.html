@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escalonamiento por Gauss</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .input-container {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 70px;
+            text-align: center;
+        }
+
+        .matrix-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 35px;
+            margin-top: 15px;
+        }
+
+        .matrix-box {
+            text-align: center;
+        }
+
+        .matrix-container {
+            display: grid;
+            grid-auto-rows: 70px;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .matrix-container input {
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+        }
+
+        .matrix-cell {
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 50px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilos para el visualizador de pasos */
+        .steps-viewer {
+            display: none;
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .steps-viewer.active {
+            display: block;
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4caf50;
+        }
+
+        .step-matrix-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        /* Contenedor de flechas */
+        .arrows-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            min-width: 100px;
+        }
+
+        .arrow-wrapper {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            height: 70px;
+            position: relative;
+        }
+
+        .arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .arrow-line {
+            width: 3px;
+            background-color: #2196F3;
+            position: relative;
+        }
+
+        .arrow-line::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid #2196F3;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
+
+        .arrow-label {
+            background-color: #2196F3;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            gap: 5px;
+        }
+
+        .swap-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #FF5722;
+            font-weight: bold;
+        }
+
+        .step-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            background-color: #2196F3;
+            padding: 8px 20px;
+        }
+
+        .nav-button:hover {
+            background-color: #1976D2;
+        }
+
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .step-counter {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Resaltar filas involucradas */
+        .matrix-cell.source-row {
+            background-color: #E3F2FD;
+            border: 2px solid #2196F3;
+        }
+
+        .matrix-cell.target-row {
+            background-color: #FFF3E0;
+            border: 2px solid #FF9800;
+        }
+
+        .matrix-cell.swap-row {
+            background-color: #FFEBEE;
+            border: 2px solid #FF5722;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Escalonamiento por Gauss</h1>
+
+        <div class="input-container">
+            <label for="matrix-rows">Número de Filas:</label>
+            <input type="number" id="matrix-rows" min="1" value="3">
+            <label for="matrix-cols">Número de Columnas:</label>
+            <input type="number" id="matrix-cols" min="1" value="3">
+        </div>
+
+        <div class="matrix-section">
+            <div class="matrix-box">
+                <h2>Matriz Original</h2>
+                <div class="matrix-container" id="matrix-container"></div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="generate-matrix">Generar Matriz</button>
+            <button id="gauss-button">Escalonar (Gauss)</button>
+        </div>
+
+        <!-- Visualizador de pasos -->
+        <div class="steps-viewer" id="steps-viewer">
+            <div class="step-header">
+                <div class="step-title" id="step-title">Paso 1</div>
+                <div class="step-description" id="step-description"></div>
+            </div>
+            
+            <div class="step-matrix-container">
+                <div class="matrix-box">
+                    <div class="matrix-container" id="step-matrix"></div>
+                </div>
+                <div class="arrows-container" id="arrows-container"></div>
+            </div>
+
+            <div class="step-navigation">
+                <button class="nav-button" id="prev-button">← Anterior</button>
+                <span class="step-counter" id="step-counter">1 / 1</span>
+                <button class="nav-button" id="next-button">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allSteps = [];
+        let currentStepIndex = 0;
+
+        // Genera la matriz de entrada
+        function generateMatrix() {
+            const rows = parseInt(document.getElementById("matrix-rows").value);
+            const cols = parseInt(document.getElementById("matrix-cols").value);
+            const matrixContainer = document.getElementById("matrix-container");
+
+            if (rows < 1 || cols < 1) {
+                alert("Las filas y columnas deben ser al menos 1");
+                return;
+            }
+
+            matrixContainer.innerHTML = "";
+            document.getElementById("steps-viewer").classList.remove("active");
+
+            matrixContainer.style.gridTemplateColumns = `repeat(${cols}, 70px)`;
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const input = document.createElement("input");
+                    input.type = "number";
+                    input.id = `matrix-${i}-${j}`;
+                    input.value = 0;
+                    matrixContainer.appendChild(input);
+                }
+            }
+        }
+
+        // Función para copiar una matriz
+        function copyMatrix(matrix) {
+            return matrix.map(row => [...row]);
+        }
+
+        // Función para escalonamiento por Gauss con pasos
+        function gaussElimination() {
+            const rows = parseInt(document.getElementById("matrix-rows").value);
+            const cols = parseInt(document.getElementById("matrix-cols").value);
+
+            // Obtener matriz original
+            let matrix = [];
+            for (let i = 0; i < rows; i++) {
+                let row = [];
+                for (let j = 0; j < cols; j++) {
+                    const value = parseFloat(document.getElementById(`matrix-${i}-${j}`).value) || 0;
+                    row.push(value);
+                }
+                matrix.push(row);
+            }
+
+            allSteps = [];
+            
+            // Guardar paso inicial
+            allSteps.push({
+                matrix: copyMatrix(matrix),
+                description: "Matriz original - Estado inicial antes de aplicar el método de Gauss",
+                operation: null
+            });
+
+            // Aplicar eliminación de Gauss
+            for (let i = 0; i < Math.min(rows, cols); i++) {
+                // Pivote
+                let pivot = matrix[i][i];
+                
+                // Si el pivote es 0, buscar fila con valor distinto de 0
+                if (Math.abs(pivot) < 0.0001) {
+                    let swapped = false;
+                    for (let k = i + 1; k < rows; k++) {
+                        if (Math.abs(matrix[k][i]) > 0.0001) {
+                            [matrix[i], matrix[k]] = [matrix[k], matrix[i]];
+                            allSteps.push({
+                                matrix: copyMatrix(matrix),
+                                description: `Intercambio de filas (el pivote era cero)`,
+                                operation: {
+                                    type: 'swap',
+                                    row1: i,
+                                    row2: k
+                                }
+                            });
+                            pivot = matrix[i][i];
+                            swapped = true;
+                            break;
+                        }
+                    }
+                    if (!swapped) {
+                        continue;
+                    }
+                }
+
+                // Hacer ceros debajo del pivote
+                for (let k = i + 1; k < rows; k++) {
+                    if (Math.abs(matrix[k][i]) < 0.0001) continue;
+                    
+                    const factor = matrix[k][i] / pivot;
+                    for (let j = i; j < cols; j++) {
+                        matrix[k][j] -= factor * matrix[i][j];
+                    }
+                    
+                    allSteps.push({
+                        matrix: copyMatrix(matrix),
+                        description: `Eliminando elemento en posición [${k+1}, ${i+1}]`,
+                        operation: {
+                            type: 'eliminate',
+                            sourceRow: i,
+                            targetRow: k,
+                            factor: factor
+                        }
+                    });
+                }
+            }
+
+            allSteps.push({
+                matrix: copyMatrix(matrix),
+                description: "Matriz en forma escalonada - Proceso completado ✓",
+                operation: null
+            });
+
+            // Mostrar el visualizador de pasos
+            currentStepIndex = 0;
+            showStep(currentStepIndex);
+            document.getElementById("steps-viewer").classList.add("active");
+        }
+
+        function showStep(index) {
+            const step = allSteps[index];
+            const rows = step.matrix.length;
+            const cols = step.matrix[0].length;
+            
+            document.getElementById("step-title").textContent = 
+                index === 0 ? "Matriz Original" : 
+                index === allSteps.length - 1 ? "Resultado Final" :
+                `Paso ${index}`;
+            
+            document.getElementById("step-description").innerHTML = step.description;
+            document.getElementById("step-counter").textContent = `${index + 1} / ${allSteps.length}`;
+
+            const stepMatrix = document.getElementById("step-matrix");
+            stepMatrix.innerHTML = "";
+            stepMatrix.style.gridTemplateColumns = `repeat(${cols}, 70px)`;
+
+            // Crear celdas de la matriz
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("matrix-cell");
+                    cell.textContent = step.matrix[i][j].toFixed(2);
+                    
+                    // Resaltar filas involucradas en la operación
+                    if (step.operation) {
+                        if (step.operation.type === 'eliminate') {
+                            if (i === step.operation.sourceRow) {
+                                cell.classList.add("source-row");
+                            } else if (i === step.operation.targetRow) {
+                                cell.classList.add("target-row");
+                            }
+                        } else if (step.operation.type === 'swap') {
+                            if (i === step.operation.row1 || i === step.operation.row2) {
+                                cell.classList.add("swap-row");
+                            }
+                        }
+                    }
+                    
+                    stepMatrix.appendChild(cell);
+                }
+            }
+
+            // Mostrar flechas
+            const arrowsContainer = document.getElementById("arrows-container");
+            arrowsContainer.innerHTML = "";
+
+            if (step.operation) {
+                if (step.operation.type === 'eliminate') {
+                    // Crear flecha desde fila fuente a fila destino
+                    const sourceRow = step.operation.sourceRow;
+                    const targetRow = step.operation.targetRow;
+                    const factor = step.operation.factor;
+
+                    // Posicionar la flecha entre las filas
+                    for (let i = 0; i < rows; i++) {
+                        const wrapper = document.createElement("div");
+                        wrapper.className = "arrow-wrapper";
+                        
+                        if (i === sourceRow) {
+                            const arrow = document.createElement("div");
+                            arrow.className = "arrow";
+                            
+                            const label = document.createElement("div");
+                            label.className = "arrow-label";
+                            label.textContent = `× ${factor.toFixed(2)*-1}`;
+                            
+                            const line = document.createElement("div");
+                            line.className = "arrow-line";
+                            
+                            // Ajustar altura de la flecha según la distancia entre filas
+                            const distance = targetRow - sourceRow;
+                            line.style.height = `${distance * 90}px`;
+                            
+                            arrow.appendChild(label);
+                            arrow.appendChild(line);
+                            wrapper.appendChild(arrow);
+                        }
+                        
+                        arrowsContainer.appendChild(wrapper);
+                    }
+                } else if (step.operation.type === 'swap') {
+                    // Mostrar símbolo de intercambio
+                    const row1 = step.operation.row1;
+                    const row2 = step.operation.row2;
+
+                    for (let i = 0; i < rows; i++) {
+                        const wrapper = document.createElement("div");
+                        wrapper.className = "arrow-wrapper";
+                        
+                        if (i === row1 || i === row2) {
+                            const swap = document.createElement("div");
+                            swap.className = "swap-arrow";
+                            swap.textContent = "⇄";
+                            wrapper.appendChild(swap);
+                        }
+                        
+                        arrowsContainer.appendChild(wrapper);
+                    }
+                }
+            }
+
+            document.getElementById("prev-button").disabled = (index === 0);
+            document.getElementById("next-button").disabled = (index === allSteps.length - 1);
+        }
+
+        document.getElementById("generate-matrix").addEventListener("click", generateMatrix);
+        document.getElementById("gauss-button").addEventListener("click", gaussElimination);
+        
+        document.getElementById("prev-button").addEventListener("click", () => {
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                showStep(currentStepIndex);
+            }
+        });
+
+        document.getElementById("next-button").addEventListener("click", () => {
+            if (currentStepIndex < allSteps.length - 1) {
+                currentStepIndex++;
+                showStep(currentStepIndex);
+            }
+        });
+
+        window.onload = generateMatrix;
+    </script>
+</body>
+</html>

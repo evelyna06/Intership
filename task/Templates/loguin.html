@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,91 +6,220 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
     <style>
-        /* Reset de márgenes y altura para asegurarse que la página ocupe toda la ventana */
-        body, html {
-            height: 100%;
+        /* ===== RESET ===== */
+        * {
+            box-sizing: border-box;
             margin: 0;
-            font-family: Arial, sans-serif; /* Fuente clara y moderna */
+            padding: 0;
         }
 
-        /* Configuración de Flexbox para centrar el contenido */
-        body {
-            display: flex; /* Activamos el modelo Flexbox */
-            justify-content: center; /* Centrado horizontal */
-            align-items: center; /* Centrado vertical */
-            background-color: #5e2a8c; /* Fondo morado oscuro */
-            color: white; /* Color de texto blanco */
-            text-align: center; /* Alineación del texto */
-            flex-direction: column; /* Apila los elementos de forma vertical */
+        html, body {
+            height: 100%;
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #e8eaf6, #ede7f6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #2c3e50;
+            overflow: hidden;
         }
 
-        /* Estilo para el contenedor principal */
+        /* ===== ELEMENTOS DECORATIVOS ===== */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(102,126,234,0.3), transparent);
+            top: -100px;
+            left: -100px;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(118,75,162,0.25), transparent);
+            bottom: -150px;
+            right: -100px;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
         .contenido {
-            width: 350px; /* Ancho fijo para el contenedor */
-            padding: 20px; /* Espaciado interno */
-            background-color: #8e44ad; /* Fondo morado más claro */
-            border-radius: 15px; /* Bordes redondeados */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+            position: center;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 45px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.08);
+            width: 400px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
-        /* Estilo para el título */
+        .contenido:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ===== ICONO ===== */
+        .icono {
+            font-size: 48px;
+            color: #5a67d8;
+            margin-bottom: 10px;
+            animation: flotar 3s ease-in-out infinite;
+        }
+
+        @keyframes flotar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* ===== TÍTULO ===== */
         h1 {
-            font-size: 36px; /* Tamaño grande para el título */
-            margin-bottom: 20px; /* Espaciado entre el título y los campos del formulario */
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 20px;
         }
 
-        /* Estilo para los campos del formulario */
+        /* ===== CAMPOS DE TEXTO ===== */
         input {
-            width: 80%; /* Hace que el campo ocupe todo el ancho disponible */
-            padding: 10px; /* Espaciado interno */
-            margin: 10px 0; /* Espaciado vertical entre los campos */
-            border: 1px solid #8e44ad; /* Borde morado */
-            border-radius: 5px; /* Bordes redondeados */
-            background-color: #f0e6f7; /* Fondo morado muy claro */
-            color: #333; /* Texto oscuro dentro del campo */
-            font-size: 16px; /* Tamaño de fuente adecuado */
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0 18px;
+            border: 1px solid #dcdde1;
+            border-radius: 10px;
+            background-color: #f7f8fb;
+            font-size: 15px;
+            color: #2c3e50;
+            transition: all 0.3s ease;
         }
 
-        /* Estilo para el botón de iniciar sesión */
+        input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 6px rgba(102, 126, 234, 0.4);
+            background-color: #fff;
+        }
+
+        /* ===== BOTONES ===== */
         button {
-            padding: 10px 20px; /* Espaciado dentro del botón */
-            background-color: #8e44ad; /* Fondo morado claro */
-            border: none; /* Eliminar bordes predeterminados */
-            border-radius: 5px; /* Bordes redondeados */
-            color: white; /* Texto blanco */
-            font-size: 16px; /* Tamaño de fuente adecuado */
-            margin: 10px 0; /* Espaciado vertical entre los campos y el botón */
-            cursor: pointer; /* Cambio de cursor a mano al pasar sobre el botón */
-            transition: background-color 0.3s; /* Transición suave al pasar el mouse */
-            width: 100%; /* Hace que el botón ocupe todo el ancho disponible */
+            width: 100%;
+            padding: 12px 20px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
         }
 
-        /* Efecto hover para el botón */
         button:hover {
-            background-color: #5e2a8c; /* Cambia a un morado más oscuro al pasar el mouse */
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
+        }
+
+        /* ===== ENLACES ===== */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #5a67d8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #6b46c1;
+            text-decoration: underline;
+        }
+
+        /* ===== MENSAJES DE ERROR ===== */
+        ul {
+            list-style: none;
+            margin-bottom: 15px;
+            padding: 0;
+        }
+
+        li {
+            color: #e63946;
+            font-size: 14px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #7a7a7a;
+        }
+
+        footer span {
+            color: #5a67d8;
+            font-weight: 600;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 420px) {
+            .contenido {
+                width: 90%;
+                padding: 30px 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-{% if messages %}
-  <ul>
-    {% for message in messages %}
-      <li style="color: red;">{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-   
+
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
     <div class="contenido">
+        <div class="icono">∑</div>
         <h1>Hello!</h1>
         
         <!-- Formulario de inicio de sesión -->
         <form action="/loguin/" method="POST">
-            {%csrf_token%}
+            {% csrf_token %}
             <input id="username" type="text" name="username" placeholder="Username" required>
             <input id="password" type="password" name="password" placeholder="Password" required>
-            <button type="submit">loguin</button>
+            <button type="submit">Login</button>
+            <p>O inicia sesión con:</p>
             <a href="http://127.0.0.1:8000">Home</a>
         </form>
+        <a href="{% provider_login_url 'google' %}">
+            🔐 Iniciar sesión con Google
+        </a>       
+
+
+        <footer>
+            <span>Álgebra</span> Educational Platform © 2025
+        </footer>
     </div>
+
 </body>
 </html>

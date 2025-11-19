@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-e(*&3ei*51to6c+8!&=(=@vk9jqk9igw_w&elp4jx!iid+zrwv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,18 +37,31 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'task'
+    'task',
+    'django.contrib.sites',
+    'allauth', 
+    'allauth.account',
+    'allauth.socialaccount',  
+    'allauth.socialaccount.providers.google',  
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+)
+
 
 ROOT_URLCONF = 'djangocrud.urls'
 
@@ -121,3 +134,76 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# ==================== CONFIGURACIÓN DE EMAIL ====================
+
+# Para desarrollo: Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'armasyaniel@gmail.com'  # ← CAMBIA ESTO
+EMAIL_HOST_PASSWORD = 'abcd efgh ijkl mnop'  # ← CAMBIA ESTO (contraseña de app)
+DEFAULT_FROM_EMAIL = 'armasyaniel@gmail.com'
+SERVER_EMAIL = 'armasyaniel@gmail.com'
+
+# ==================== CONFIGURACIÓN DE ALLAUTH ====================
+# ==================== CONFIGURACIÓN DE ALLAUTH ====================
+# ==================== CONFIGURACIÓN DE EMAIL ====================
+
+# Backend para enviar emails reales
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Configuración de Gmail
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# TU EMAIL DE GMAIL (CÁMBIALO)
+EMAIL_HOST_USER = 'armasyaniel@gmail.com'  # ← PON TU EMAIL AQUÍ
+
+# CONTRASEÑA DE APLICACIÓN QUE GENERASTE (CÁMBIALA)
+EMAIL_HOST_PASSWORD = 'zzlc mddv sttq mpqk'  # ← PON TU CONTRASEÑA DE APP AQUÍ
+
+# Email que aparecerá como remitente
+DEFAULT_FROM_EMAIL = 'armasyaniel@gmail.com'  # ← PON TU EMAIL AQUÍ
+SERVER_EMAIL = 'armasyaniel@gmail.com'  # ← PON TU EMAIL AQUÍ
+
+
+
+SITE_ID = 1
+
+# Redirecciones
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# Configuración de cuenta
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*']
+
+# ← CAMBIAR ESTO: De 'none' a 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+# Configuración de verificación de email
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3  # Link válido por 3 días
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True  # Login automático al verificar
+
+# Configuración de Google OAuth
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'VERIFIED_EMAIL': True
+    }
+}
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+# Al final del archivo
+GROQ_API_KEY ='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'
